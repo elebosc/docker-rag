@@ -1,0 +1,52 @@
+services:
+
+  ollama:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.ollama
+    hostname: ollama
+    ports:
+      - 11434:11434   # port 11434 of the host is mapped to port 11434 of the container
+    healthcheck: 
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - net
+  
+  chroma:
+    image: chromadb/chroma
+    hostname: chroma
+    ports:
+      - 8000:8000   # port 8000 of the host is mapped to port 8000 of the container
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/8000'"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - net
+  
+  rag:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.rag
+    links:
+      - chroma
+      - ollama
+    depends_on:
+      chroma:
+        condition: service_healthy
+        restart: true
+      ollama:
+        condition: service_healthy
+        restart: true
+    ports:
+      - 8080:80  # port 8080 of the host is mapped to port 80 of the container
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge

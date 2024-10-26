@@ -1,0 +1,9 @@
+FROM ollama/ollama
+
+EXPOSE 11434
+
+COPY ./ollama_init.sh .
+
+RUN chmod +x ./ollama_init.sh
+
+RUN ./ollama_init.sh
