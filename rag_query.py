@@ -29,13 +29,13 @@ def extract_context(query):
         embedding_function=embedding_function,
     )
     docs = db.similarity_search(query)
-    fullcontent =''
+    fullcontent = ''
     for doc in docs:
         fullcontent ='. '.join([fullcontent,doc.page_content])
 
     return fullcontent
 
-def get_system_message_rag(content):
+def get_context_prompt(context):
 
     """
     Prepends the text content given as argument with a set of instructions to be used as the
@@ -60,11 +60,11 @@ def get_system_message_rag(content):
     3. Don't make up the answers by yourself.
     4. Try your best to provide answer from the given context.
 
-    CONTENT:
-    {content}
+    CONTEXT:
+    {context}
     """
 
-def get_ques_response_prompt(question):
+def get_question_prompt(question):
 
     """
     Forms the user query following the system message containing the context.
@@ -76,7 +76,7 @@ def get_ques_response_prompt(question):
     {question}
     """
 
-def generate_rag_response(content, question):
+def generate_rag_response(context, question):
 
     """
     Specifies the Ollama client, model and input we want to use for our query.
@@ -84,15 +84,15 @@ def generate_rag_response(content, question):
 
     client = Client(host='rag-llm-ollama-1')
     stream = client.chat(
-        model='llama3.2',
+        model='mistralgguf',
         messages=[
-            {"role": "system", "content": get_system_message_rag(content)},            
-            {"role": "user", "content": get_ques_response_prompt(question)}
+            {"role": "system", "content": get_context_prompt(context)},            
+            {"role": "user", "content": get_question_prompt(question)}
         ],
         stream=True
     )
-    print(get_system_message_rag(content))
-    print(get_ques_response_prompt(question))
+    print(get_context_prompt(context))
+    print(get_question_prompt(question))
     print("####### THINKING OF ANSWER............ ")
     full_answer = ''
     for chunk in stream:

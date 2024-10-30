@@ -45,6 +45,6 @@ db = Chroma(
 )
 
 # Print out a similarity search query for a sanity check
-query = "What training does the model have?"
-docs = db.similarity_search(query)
-print(docs[0].page_content)
+# query = "What training does the model have?"
+# docs = db.similarity_search(query)
+# print(docs[0].page_content)

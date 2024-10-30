@@ -1,9 +1,10 @@
 FROM ollama/ollama
 
-EXPOSE 11434
-
+COPY ./models ./models/
 COPY ./ollama_init.sh .
 
 RUN chmod +x ./ollama_init.sh
+
+EXPOSE 11434
 
 RUN ./ollama_init.sh
