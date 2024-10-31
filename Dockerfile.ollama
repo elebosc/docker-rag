@@ -1,10 +1,11 @@
-FROM ollama/ollama
+FROM elebosc/ollama-gguf
 
-COPY ./models ./models/
+WORKDIR /app/
+
+EXPOSE 11434
+
 COPY ./ollama_init.sh .
 
 RUN chmod +x ./ollama_init.sh
-
-EXPOSE 11434
 
 RUN ./ollama_init.sh

@@ -12,7 +12,10 @@ RUN pip install --no-cache-dir flask
 RUN pip install --no-cache-dir ollama
 RUN pip install --no-cache-dir pypdf
 
-COPY . .
+COPY ./2404.07143v2.pdf .
+COPY ./rag.py .
+COPY ./rag_query.py .
+COPY ./rag_init.sh .
 
 EXPOSE 80
 

@@ -31,8 +31,14 @@ client = chromadb.HttpClient(
     tenant=DEFAULT_TENANT,
     database=DEFAULT_DATABASE
 )
-client.delete_collection(name="my_collection")
+
+try:
+    client.get_collection("my_collection")
+    client.delete_collection("my_collection")
+except:
+    pass
 collection = client.create_collection("my_collection")
+
 for doc in docs:
     collection.add(
         ids=[str(uuid.uuid1())], metadatas=doc.metadata, documents=doc.page_content
@@ -43,8 +49,3 @@ db = Chroma(
     collection_name="my_collection",
     embedding_function=embedding_function,
 )
-
-# Print out a similarity search query for a sanity check
-# query = "What training does the model have?"
-# docs = db.similarity_search(query)
-# print(docs[0].page_content)
