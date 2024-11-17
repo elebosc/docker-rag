@@ -1,6 +1,5 @@
-import langchain_community
-import langchain_text_splitters
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import DirectoryLoader
+from langchain_community.document_loaders.pdf import PyMuPDFLoader
 from langchain_community.embeddings.sentence_transformer import (
     SentenceTransformerEmbeddings,
 )
@@ -11,13 +10,13 @@ import uuid
 import chromadb
 from chromadb.config import DEFAULT_TENANT, DEFAULT_DATABASE, Settings
 
-# Load the document and split it into pages
-loader = PyPDFLoader("2404.07143v2.pdf")
-pages = loader.load_and_split()
+# Load the documents
+loader = DirectoryLoader("documents", glob="*.pdf", loader_cls=PyMuPDFLoader)
+documents = loader.load()
 
-# Split it into chunks
+# Split them into chunks
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-docs = text_splitter.split_documents(pages)
+chunks = text_splitter.split_documents(documents)
 
 # Create the open-source embedding function
 embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
@@ -39,9 +38,9 @@ except:
     pass
 collection = client.create_collection("my_collection")
 
-for doc in docs:
+for chunk in chunks:
     collection.add(
-        ids=[str(uuid.uuid1())], metadatas=doc.metadata, documents=doc.page_content
+        ids=[str(uuid.uuid1())], metadatas=chunk.metadata, documents=chunk.page_content
     )
 
 db = Chroma(

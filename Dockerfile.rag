@@ -10,9 +10,11 @@ RUN pip install --no-cache-dir sentence-transformers
 RUN pip install --no-cache-dir openai
 RUN pip install --no-cache-dir flask
 RUN pip install --no-cache-dir ollama
-RUN pip install --no-cache-dir pypdf
+RUN pip install --no-cache-dir unstructured
+RUN pip install --no-cache-dir "unstructured[pdf]"
+RUN pip install --no-cache-dir pymupdf
 
-COPY ./2404.07143v2.pdf .
+COPY ./documents/ ./documents/
 COPY ./rag.py .
 COPY ./rag_query.py .
 COPY ./rag_init.sh .
