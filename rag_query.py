@@ -16,7 +16,7 @@ def extract_context(query):
     """
 
     chroma_client = chromadb.HttpClient(
-        host='rag-llm-chroma-1',
+        host='192.168.0.101',
         port=8000,
         settings=Settings(allow_reset=True),
         tenant=DEFAULT_TENANT,
@@ -82,7 +82,7 @@ def generate_rag_response(context, question):
     Specifies the Ollama client, model and input we want to use for our query.
     """
 
-    client = Client(host='rag-llm-ollama-1')
+    client = Client(host='192.168.0.102')
     stream = client.chat(
         model='mistralgguf',
         messages=[

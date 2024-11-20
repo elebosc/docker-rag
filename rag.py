@@ -24,7 +24,7 @@ embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2"
 # Creation of Chroma vectors db
 
 client = chromadb.HttpClient(
-    host="rag-llm-chroma-1",
+    host="192.168.0.101",
     port=8000,
     settings=Settings(allow_reset=True),
     tenant=DEFAULT_TENANT,
