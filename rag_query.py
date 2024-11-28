@@ -1,9 +1,7 @@
 import chromadb
 from chromadb.config import DEFAULT_TENANT, DEFAULT_DATABASE, Settings
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings.sentence_transformer import (
-    SentenceTransformerEmbeddings,
-)
+from langchain_community.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from ollama import Client
 from flask import Flask, request
 
@@ -16,7 +14,7 @@ def extract_context(query):
     """
 
     chroma_client = chromadb.HttpClient(
-        host='192.168.0.101',
+        host='rag-backend_chroma',
         port=8000,
         settings=Settings(allow_reset=True),
         tenant=DEFAULT_TENANT,
@@ -82,7 +80,7 @@ def generate_rag_response(context, question):
     Specifies the Ollama client, model and input we want to use for our query.
     """
 
-    client = Client(host='192.168.0.102')
+    client = Client(host='rag-backend_ollama')
     stream = client.chat(
         model='mistralgguf',
         messages=[

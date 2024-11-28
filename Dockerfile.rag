@@ -18,7 +18,7 @@ COPY ./documents/ ./documents/
 COPY ./rag.py .
 COPY ./rag_query.py .
 COPY ./rag_init.sh .
-COPY ./wait-for-it.sh .
+# COPY ./wait-for-it.sh .
 
 EXPOSE 80
 
@@ -26,6 +26,6 @@ ENV FLASK_APP=rag_query.py
 ENV FLASK_RUN_PORT=80
 
 RUN chmod +x ./rag_init.sh
-RUN chmod +x ./wait-for-it.sh
+# RUN chmod +x ./wait-for-it.sh
 
 CMD ["./rag_init.sh"]

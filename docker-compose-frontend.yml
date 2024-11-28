@@ -5,17 +5,15 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.rag
-    links:
-      - chroma
-      - ollama
-    depends_on:
-      - chroma
-      - ollama
+    # depends_on:
+    #   - chroma
+    #   - ollama
     ports:
-      - 8080:80  # port 8080 of the host is mapped to port 80 of the container
+      - 8080:80   # port 8080 of the host is mapped to port 80 of the container
     networks:
       - rag-frontend-net
       - rag-backend-net
+    command: tail -F anything
     deploy:
       mode: global
       placement:
