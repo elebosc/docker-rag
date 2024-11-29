@@ -1,19 +1,16 @@
 services:
   
   rag:
-    image: python:3.9   # Docker Swarm requires to specify the image used even if it is already specified in the Dockerfile
+    image: rag
     build:
       context: .
       dockerfile: ./Dockerfile.rag
-    # depends_on:
-    #   - chroma
-    #   - ollama
     ports:
       - 8080:80   # port 8080 of the host is mapped to port 80 of the container
     networks:
       - rag-frontend-net
       - rag-backend-net
-    command: tail -F anything
+    stdin_open: true
     deploy:
       mode: global
       placement:
