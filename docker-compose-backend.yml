@@ -1,7 +1,7 @@
 services:
 
   ollama:
-    image: elebosc/ollama-gguf
+    image: ollama-gguf
     build:
       context: .
       dockerfile: ./Dockerfile.ollama
@@ -15,6 +15,7 @@ services:
       retries: 3
     networks:
       - rag-backend-net
+    entrypoint: ["/usr/bin/bash", "./ollama_init.sh"]
     stdin_open: true
     deploy:
       mode: global
