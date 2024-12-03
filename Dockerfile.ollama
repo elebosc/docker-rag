@@ -1,4 +1,4 @@
-FROM elebosc/ollama-gguf
+FROM elebosc/ollama-gguf:1.0
 
 EXPOSE 11434
 

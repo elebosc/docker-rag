@@ -1,7 +1,7 @@
 services:
 
   ollama:
-    image: ollama-gguf
+    image: ollama-gguf:1.1
     build:
       context: .
       dockerfile: ./Dockerfile.ollama
