@@ -10,22 +10,16 @@ RUN pip install --no-cache-dir sentence-transformers
 RUN pip install --no-cache-dir openai
 RUN pip install --no-cache-dir flask
 RUN pip install --no-cache-dir ollama
-RUN pip install --no-cache-dir unstructured
-RUN pip install --no-cache-dir "unstructured[pdf]"
-RUN pip install --no-cache-dir pymupdf
 
-COPY ./documents/ ./documents/
-COPY ./rag.py .
 COPY ./rag_query.py .
-COPY ./rag_init.sh .
+COPY ./frontend_init.sh .
 
 EXPOSE 80
 
-RUN chmod +x ./rag.py
-RUN chmod +x ./rag_init.sh
 RUN chmod +x ./rag_query.py
+RUN chmod +x ./frontend_init.sh
 
 ENV FLASK_APP=rag_query.py
 ENV FLASK_RUN_PORT=80
 
-CMD ["./rag_init.sh"]
+CMD ["./frontend_init.sh"]

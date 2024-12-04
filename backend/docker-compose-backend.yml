@@ -2,9 +2,6 @@ services:
 
   ollama:
     image: ollama-gguf:1.1
-    build:
-      context: .
-      dockerfile: ./Dockerfile.ollama
     hostname: ollama
     ports:
       - 11434:11434   # port 11434 of the host is mapped to port 11434 of the container

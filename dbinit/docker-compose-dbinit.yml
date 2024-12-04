@@ -1,0 +1,24 @@
+services:
+
+  db-init:
+    image: db-init
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dbinit
+    networks:
+      - rag-backend-net
+      - rag-frontend-net
+    restart: on-failure
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.hostname == frontend-chroma-vm
+
+networks:
+  rag-frontend-net:
+    name: rag-frontend-net
+    external: true
+  rag-backend-net:
+    name: rag-backend-net
+    external: true

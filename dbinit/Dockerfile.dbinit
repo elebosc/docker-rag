@@ -1,0 +1,22 @@
+FROM python:3.9
+
+WORKDIR /usr/src/app/
+
+RUN pip install -U pip
+RUN pip install --no-cache-dir chromadb
+RUN pip install --no-cache-dir langchain_community
+RUN pip install --no-cache-dir langchain_text_splitters
+RUN pip install --no-cache-dir sentence-transformers
+RUN pip install --no-cache-dir openai
+RUN pip install --no-cache-dir unstructured
+RUN pip install --no-cache-dir "unstructured[pdf]"
+RUN pip install --no-cache-dir pymupdf
+
+COPY ./documents/ ./documents/
+COPY ./db_init.py .
+COPY ./db_init.sh .
+
+RUN chmod +x ./db_init.py
+RUN chmod +x ./db_init.sh
+
+CMD ["./db_init.sh"]
