@@ -8,20 +8,19 @@ import uuid
 import chromadb
 from chromadb.config import DEFAULT_TENANT, DEFAULT_DATABASE, Settings
 
-# Load the documents
+# Load documents
 loader = DirectoryLoader("documents", glob="*.pdf", loader_cls=PyMuPDFLoader)
 documents = loader.load()
 
-# Split them into chunks
-text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+# Split documents into chunks
+text_splitter = CharacterTextSplitter(chunk_size=256, chunk_overlap=40)
 chunks = text_splitter.split_documents(documents)
 
-# Create the open-source embedding function
 embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
 
 # Creation of Chroma vectors db
 
-client = chromadb.HttpClient(
+chroma_client = chromadb.HttpClient(
     host="rag-backend_chroma",
     port=8000,
     settings=Settings(allow_reset=True),
@@ -30,19 +29,21 @@ client = chromadb.HttpClient(
 )
 
 try:
-    client.get_collection("my_collection")
-    client.delete_collection("my_collection")
+    chroma_client.get_collection("data_collection")
+    chroma_client.delete_collection("data_collection")
 except:
     pass
-collection = client.create_collection("my_collection")
+collection = chroma_client.create_collection("data_collection")
 
 for chunk in chunks:
     collection.add(
-        ids=[str(uuid.uuid1())], metadatas=chunk.metadata, documents=chunk.page_content
+        ids=[str(uuid.uuid1())],
+        metadatas=chunk.metadata, 
+        documents=chunk.page_content
     )
 
 db = Chroma(
-    client=client,
-    collection_name="my_collection",
+    client=chroma_client,
+    collection_name="data_collection",
     embedding_function=embedding_function,
 )

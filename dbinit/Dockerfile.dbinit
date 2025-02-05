@@ -7,9 +7,6 @@ RUN pip install --no-cache-dir chromadb
 RUN pip install --no-cache-dir langchain_community
 RUN pip install --no-cache-dir langchain_text_splitters
 RUN pip install --no-cache-dir sentence-transformers
-RUN pip install --no-cache-dir openai
-RUN pip install --no-cache-dir unstructured
-RUN pip install --no-cache-dir "unstructured[pdf]"
 RUN pip install --no-cache-dir pymupdf
 
 COPY ./documents/ ./documents/
