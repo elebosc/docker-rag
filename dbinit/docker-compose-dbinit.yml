@@ -1,24 +1,19 @@
 services:
-
-  dbinit:
-    image: dbinit
-    build:
-      context: .
-      dockerfile: ./Dockerfile.dbinit
-    networks:
-      - rag-overlay-internal-net
-      - rag-bridge-net
-    restart: on-failure
-    deploy:
-      mode: global
-      placement:
-        constraints:
-        - node.hostname == frontend-chroma-vm
-
+    dbinit:
+        image: dbinit
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - node.hostname == frontend-chroma-vm
+        restart: on-failure
+        networks:
+            - rag-overlay-internal-net
+            - rag-bridge-net
 networks:
-  rag-overlay-internal-net:
-      name: rag-overlay-internal-net
-      external: true
-  rag-bridge-net:
-    name: rag-bridge-net
-    external: true
+    rag-overlay-internal-net:
+        name: rag-overlay-internal-net
+        external: true
+    rag-bridge-net:
+        name: rag-bridge-net
+        external: true

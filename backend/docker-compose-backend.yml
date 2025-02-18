@@ -1,45 +1,28 @@
 services:
 
-  ollama:
-    image: ollama-gguf:1.1
-    hostname: ollama
-    ports:
-      - 11434:11434   # port 11434 of the host is mapped to port 11434 of the container
-    healthcheck: 
-      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - rag-overlay-internal-net
-    entrypoint: ["/usr/bin/bash", "./ollama_init.sh"]
-    stdin_open: true
-    deploy:
-      mode: global
-      placement:
-        constraints:
-        - node.hostname == ollama-vm
+    ollama:
+        image: ollama-gguf:1.1
+        entrypoint: ["/usr/bin/bash", "./ollama_init.sh"]
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - node.hostname == ollama-vm
+        stdin_open: true
+        networks:
+            - rag-overlay-internal-net
   
-  chroma:
-    image: chromadb/chroma
-    hostname: chroma
-    ports:
-      - 8000:8000   # port 8000 of the host is mapped to port 8000 of the container
-    healthcheck:
-      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/8000'"
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - rag-overlay-internal-net
-    stdin_open: true
-    deploy:
-      mode: global
-      placement:
-        constraints:
-        - node.hostname == frontend-chroma-vm
+    chroma:
+        image: chromadb/chroma    
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - node.hostname == frontend-chroma-vm
+        networks:
+            - rag-overlay-internal-net
 
 networks:
-  rag-overlay-internal-net:
-    name: rag-overlay-internal-net
-    external: true
+    rag-overlay-internal-net:
+        name: rag-overlay-internal-net
+        external: true

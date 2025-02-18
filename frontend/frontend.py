@@ -5,6 +5,7 @@ from langchain_community.embeddings.sentence_transformer import SentenceTransfor
 from ollama import Client
 from flask import Flask, request
 
+
 def extract_context(query):
 
     chroma_client = chromadb.HttpClient(
@@ -31,12 +32,14 @@ def extract_context(query):
 
     return context
 
+
 def get_context_prompt(context):
 
     return f"""
     You are given the following context:
     {context}
     """
+
 
 def get_query_prompt(query):
 
@@ -45,40 +48,44 @@ def get_query_prompt(query):
     {query}
     """
 
-def generate_rag_response(context, query):
+
+def get_llm_answer(context, query):
+
+    context_prompt = get_context_prompt(context)
+    query_prompt = get_query_prompt(query)
+
+    print(context_prompt)
+    print(query_prompt)
 
     client = Client(host='rag-backend_ollama')
-    response_stream = client.chat(
+    answer_stream = client.chat(
         model='mistralgguf',
         messages=[
-            {"role": "system", "content": get_context_prompt(context)},            
-            {"role": "user", "content": get_query_prompt(query)}
+            {"role": "system", "content": context_prompt},            
+            {"role": "user", "content": query_prompt}
         ],
         stream=True
     )
 
-    print(get_context_prompt(context))
-    print(get_query_prompt(query))
-
-    print("Formulating a response...")
-    full_answer = ''
-    for chunk in response_stream:
+    print("Formulating an answer...")
+    answer = ''
+    for chunk in answer_stream:
         print(chunk['message']['content'], end='', flush=True)
-        full_answer =''.join([full_answer, chunk['message']['content']])
+        answer = ''.join([answer, chunk['message']['content']])
+    
+    return answer
 
-    return full_answer
-
-# Flask server creation
 
 app = Flask(__name__) 
 
-@app.route('/query', methods=['POST'])
+@app.route('/', methods=['POST'])
 def get_answer():
     if request.method == 'POST':
         data = request.get_json()
         query = data.get('query')
-        response = f'This is the response to your query:\n {generate_rag_response(extract_context(query), query)}'
-        return response
+        context = extract_context(query)
+        answer = f'This is the answer to your query:\n {get_llm_answer(context, query)}'
+        return answer
     
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run()

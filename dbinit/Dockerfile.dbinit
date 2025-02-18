@@ -11,9 +11,7 @@ RUN pip install --no-cache-dir pymupdf
 
 COPY ./documents/ ./documents/
 COPY ./db_init.py .
-COPY ./db_init.sh .
 
 RUN chmod +x ./db_init.py
-RUN chmod +x ./db_init.sh
 
-CMD ["./db_init.sh"]
+CMD ["python", "db_init.py"]

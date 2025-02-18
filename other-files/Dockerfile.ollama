@@ -1,7 +1,5 @@
 FROM elebosc/ollama-gguf:1.0
 
-EXPOSE 11434
-
 COPY ./ollama_init.sh .
 
 RUN chmod +x ./ollama_init.sh

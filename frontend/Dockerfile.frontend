@@ -9,15 +9,13 @@ RUN pip install --no-cache-dir sentence-transformers
 RUN pip install --no-cache-dir flask
 RUN pip install --no-cache-dir ollama
 
-COPY ./rag_query.py .
-COPY ./frontend_init.sh .
+COPY ./frontend.py .
+
+RUN chmod +x ./frontend.py
+
+ENV FLASK_APP=frontend.py
+ENV FLASK_RUN_PORT=80
 
 EXPOSE 80
 
-RUN chmod +x ./rag_query.py
-RUN chmod +x ./frontend_init.sh
-
-ENV FLASK_APP=rag_query.py
-ENV FLASK_RUN_PORT=80
-
-CMD ["./frontend_init.sh"]
+CMD ["flask", "run", "--host=0.0.0.0"]

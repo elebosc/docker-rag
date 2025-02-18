@@ -1,26 +1,21 @@
 services:
-  
-  frontend:
-    image: frontend
-    build:
-      context: .
-      dockerfile: ./Dockerfile.frontend
-    ports:
-      - 8080:80   # port 8080 of the host is mapped to port 80 of the container
-    networks:
-      - rag-bridge-net
-      - rag-overlay-internal-net
-    stdin_open: true
-    deploy:
-      mode: global
-      placement:
-        constraints:
-        - node.hostname == frontend-chroma-vm
-
+    frontend:
+        image: frontend
+        ports:
+            - 8080:80
+        stdin_open: true
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - node.hostname == frontend-chroma-vm
+        networks:
+            - rag-overlay-internal-net
+            - rag-bridge-net
 networks:
-  rag-bridge-net:
-    name: rag-bridge-net
-    external: true
-  rag-overlay-internal-net:
-    name: rag-overlay-internal-net
-    external: true
+    rag-overlay-internal-net:
+        name: rag-overlay-internal-net
+        external: true
+    rag-bridge-net:
+        name: rag-bridge-net
+        external: true
