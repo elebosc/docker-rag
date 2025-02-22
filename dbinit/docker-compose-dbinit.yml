@@ -2,11 +2,10 @@ services:
     dbinit:
         image: dbinit
         deploy:
-            mode: global
+            mode: global-job
             placement:
                 constraints:
                     - node.hostname == frontend-chroma-vm
-        restart: on-failure
         networks:
             - rag-overlay-internal-net
             - rag-bridge-net
